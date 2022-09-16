@@ -6,6 +6,8 @@ import scipy.stats as stats
 import os
 import env
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
+
 
 
 # ACQUIRE
