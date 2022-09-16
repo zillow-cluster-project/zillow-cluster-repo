@@ -99,6 +99,11 @@ def prepare_zillow(df):
     df = df.dropna()
     df = df.drop(index=df[df.regionidzip == df.regionidzip.max()].index.tolist())
     
+    df.columns = ['basement_sqft', 'baths', 'beds', 'bathnbed', 'decktype', 'area', 'area12', 'county', 'fireplace', 'fullbath', 'hottub_or_spa', 'lat', 'long', 'lotsize',
+              'pool', 'pool10', 'pool2', 'pool7', 'landuse_code', 'raw_census', 'city_id', 'county_id', 'zip_id', 'rooms', 'threequarterbnb', 'year_built',
+               'fireplace_flag', 'structure_value', 'tax_value', 'assessment_year', 'land_value', 'taxes', 'tax_delq_flag', 'tax_delq_year', 'census', 'logerror',
+               'transactiondate', 'construction_type', 'landuse_desc']
+    
     return df
 
 
