@@ -13,12 +13,23 @@ from sklearn.preprocessing import MinMaxScaler
 
 
 def get_models(train, val, test):
-
+    '''
+    This function takes in train, validate, and test dataframes, scales them,
+    and returns the results for the below models as well as the X and y values.
+    
+    Models ran:
+    - Baseline (mean)
+    - OLS/Linear Regression
+    - LassoLars (alpha=1)
+    - Quadratic Polynomial Regression
+    - Cubic Polynomial Regression
+    '''
+    # identify which features to scale
     cols_to_scale = ['baths', 'beds', 'living_space', 'county', 'lat', 'long', 'lotsize', 'pool', 'city_id','year_built', 'tax_value', 'price_sqft',
                     'mvp_0', 'mvp_1', 'mvp_2', 'mvp_3', 
                     'value_0', 'value_1', 'value_2',
                     'size_0', 'size_1', 'size_2']
-
+    # create copies to not mess with the original datasets
     train_scaled = train.copy()
     val_scaled = val.copy()
     test_scaled = test.copy()
@@ -35,25 +46,18 @@ def get_models(train, val, test):
     test_scaled[cols_to_scale] = pd.DataFrame(scaler.transform(test[cols_to_scale]),
                                                columns = test[cols_to_scale].columns.values).set_index([test.index.values])
     
-    
+    # create X and y from the scaled data, select features to be used in modeling
     X_train, y_train = train_scaled[['baths', 'beds', 'living_space', 'lat', 'long', 'county', 'lotsize', 'year_built', 'tax_value', 'price_sqft',
-                    'mvp_0', 'mvp_2', 
-                    # 'value_0', 'value_1', 
-                                     'value_2',
-                    # 'size_0', 'size_1', 'size_2'
+                    'mvp_0', 'mvp_2', 'value_2',
                                     ]], train.logerror
     X_val, y_val = val_scaled[['baths', 'beds', 'living_space', 'lat', 'long', 'county', 'lotsize', 'year_built', 'tax_value', 'price_sqft',
-                    'mvp_0', 'mvp_2',  
-                    # 'value_0', 'value_1', 
-                               'value_2',
-                    # 'size_0', 'size_1', 'size_2'
+                    'mvp_0', 'mvp_2', 'value_2',
                               ]], val.logerror
     X_test, y_test = test_scaled[['baths', 'beds', 'living_space', 'lat', 'long', 'county', 'lotsize', 'year_built', 'tax_value', 'price_sqft',
-                    'mvp_0', 'mvp_2', 
-                    # 'value_0', 'value_1', 
-                                  'value_2',
-                    # 'size_0', 'size_1', 'size_2'
+                    'mvp_0', 'mvp_2', 'value_2',
                                  ]], test.logerror
+    
+    # make the y's into DataFrames
     y_train = pd.DataFrame(y_train)
     y_val = pd.DataFrame(y_val)
     y_test = pd.DataFrame(y_test)
@@ -77,16 +81,15 @@ def get_models(train, val, test):
         'r2_val': explained_variance_score(y_val.logerror, y_val.pred_mean)
     }])
 
-
+    # Linear Regression - OLS model
+    # run the model
     lm = LinearRegression()
     lm.fit(X_train, y_train.logerror)
     y_train['pred_lm'] = lm.predict(X_train)
     rmse_train = mean_squared_error(y_train.logerror, y_train.pred_lm, squared=False)
     y_val['pred_lm'] = lm.predict(X_val)
     rmse_val = mean_squared_error(y_val.logerror, y_val.pred_lm, squared=False)
-    # print("RMSE for OLS using LinearRegression\nTraining/In-Sample: ", rmse_train, 
-    #       "\nValidation/Out-of-Sample: ", rmse_val)
-
+    # save the results
     metrics = metrics.append({
         'model': 'OLS',
         'rmse_train': rmse_train,
@@ -103,7 +106,6 @@ def get_models(train, val, test):
     rmse_train = mean_squared_error(y_train.logerror, y_train.pred_lars, squared=False)
     y_val['pred_lars'] = lars.predict(X_val)
     rmse_val = mean_squared_error(y_val.logerror, y_val.pred_lars, squared=False)
-
     # save the results
     metrics = metrics.append({
         'model': 'LarsLasso, alpha 1',
@@ -127,7 +129,6 @@ def get_models(train, val, test):
     rmse_train = mean_squared_error(y_train.logerror, y_train.pred_lm2, squared=False)
     y_val['pred_lm2'] = lm2.predict(X_val_d2)
     rmse_val = mean_squared_error(y_val.logerror, y_val.pred_lm2, squared=False)
-
     # save the results
     metrics = metrics.append({
         'model': 'Quadratic Linear Regression',
@@ -141,7 +142,6 @@ def get_models(train, val, test):
     pf = PolynomialFeatures(degree=3)
     X_train_d2 = pf.fit_transform(X_train)
     X_val_d2 = pf.transform(X_val)
-
     # run the model
     lm2 = LinearRegression()
     lm2.fit(X_train_d2, y_train.logerror)
@@ -149,7 +149,6 @@ def get_models(train, val, test):
     rmse_train = mean_squared_error(y_train.logerror, y_train.pred_lm2, squared=False)
     y_val['pred_lm2'] = lm2.predict(X_val_d2)
     rmse_val = mean_squared_error(y_val.logerror, y_val.pred_lm2, squared=False)
-
     # save the results
     metrics = metrics.append({
         'model': 'Cubic Linear Regression',
@@ -163,6 +162,11 @@ def get_models(train, val, test):
 
 
 def run_test(X_train, y_train, X_val, y_val, X_test, y_test):
+    '''
+    This function takes in the X and y values for train, validate, and test
+    and returns the results in a DataFrame for the zillow clustering project's 
+    best model: Linear Regression/OLS
+    '''
     # run the model
     lm = LinearRegression()
     lm.fit(X_train, y_train.logerror)
@@ -172,7 +176,6 @@ def run_test(X_train, y_train, X_val, y_val, X_test, y_test):
     rmse_val = mean_squared_error(y_val.logerror, y_val.pred_lm, squared=False)
     y_test['pred_lm'] = lm.predict(X_test)
     rmse_test = mean_squared_error(y_test.logerror, y_test.pred_lm, squared=False)
-
 
     # save the results
     results = pd.DataFrame({'train': 

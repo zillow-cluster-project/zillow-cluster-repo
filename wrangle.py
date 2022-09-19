@@ -10,19 +10,11 @@ from sklearn.preprocessing import MinMaxScaler
 
 
 
-# ACQUIRE
 def acquire_zillow():
     '''
     This function checks if the zillow data is saved locally. 
     If it is not local, this function reads the zillow data from 
     the CodeUp MySQL database and return it in a DataFrame.
-    
-    The prepare portion of this function removes outliers via 
-    quantiles. 
-        - Renames the features
-        - Feature engineers a readable location
-        - Feature engineers year_built into decade bins
-        - Feature engineers tax_value percentiles(quadrants), split for location
     '''
     
     # Acquire
@@ -56,9 +48,11 @@ def acquire_zillow():
                 AND longitude is not NULL
                 AND (propertylandusetypeid = 261 OR propertylandusetypeid = 279);
                 '''
+                
         df = pd.read_sql(q, env.conn('zillow'))
+        # only keep the most recent transaction for each home
         df = df.sort_values('transactiondate').drop_duplicates(keep='last')
-        
+        # drop the foreign keys and other unnecessary columns
         df = df.drop(columns=['heatingorsystemtypeid', 
                               'buildingclasstypeid',
                               'architecturalstyletypeid', 
@@ -79,7 +73,16 @@ def acquire_zillow():
 
 
 def prepare_zillow(df):
+    '''
+    This function takes in the zillow dataframe after it has been acquired
+    from the acquire_zillow function. It drops columns, handles nulls,
+    renames features, and feature engineers before returning the complete
+    dataframe.
+    '''
+    # drop foreign key columns or ones that aren't needed
     df = df.drop(columns=['buildingqualitytypeid','propertyzoningdesc','unitcnt','heatingorsystemdesc','id','id.1'])
+    
+    # fill missing values
     df.fullbathcnt = df.fullbathcnt.fillna(0)
     df.pooltypeid2 = df.pooltypeid2.fillna(0)
     df.pooltypeid10 = df.pooltypeid10.fillna(0)
@@ -97,79 +100,31 @@ def prepare_zillow(df):
     df.basementsqft = df.basementsqft.fillna(0)
     df.numberofstories.value_counts(dropna=False)
     
+    # drop columns or indicies beyond the threshold of nulls
     df = handle_missing_values(df, prop_req_cols=.6, prop_req_rows=.75)
-    df = df.dropna()
-    df = df.drop(index=df[df.regionidzip == df.regionidzip.max()].index.tolist())
     
+    # drop any remaining indicies with nulls
+    df = df.dropna()
+    # drop the weird zipcode
+    df = df.drop(index=df[df.regionidzip == df.regionidzip.max()].index.tolist())
+    # rename all the columns
     df.columns = ['basement_sqft', 'baths', 'beds', 'bathnbed', 'decktype', 'area', 'area12', 'county', 'fireplace', 'fullbath', 'hottub_or_spa', 'lat', 'long', 'lotsize',
               'pool', 'pool10', 'pool2', 'pool7', 'landuse_code', 'raw_census', 'city_id', 'county_id', 'zip_id', 'rooms', 'threequarterbnb', 'year_built',
                'fireplace_flag', 'structure_value', 'tax_value', 'assessment_year', 'land_value', 'taxes', 'tax_delq_flag', 'tax_delq_year', 'census', 'logerror',
                'transactiondate', 'construction_type', 'landuse_desc']
-    
+    # do some feature engineering
     df['living_space'] = df.area - df.baths*60 - df.beds*200
     df['price_sqft'] = df.tax_value/df.area
     
     return df
 
 
-def summarize(df):
-    print('DataFrame head: ')
-    print(df.head())
-    print()
-    print()
-    print('DataFrame info: ')
-    print(df.info())
-    print()
-    print()
-    print('DataFrame describe: ')
-    print(df.describe().T)
-    print()
-    print()
-    print('DataFrame nulls by col: ', nulls_by_col(df))
-    print()
-    print()
-    print('DataFrame nulls by row: ', nulls_by_row(df))
-    print()
-    print()
-    nums = [col for col in df.columns if df[col].dtype != 'O']
-    cats = [col for col in df.columns if col not in nums]
-    print('Value Counts: ')
-    for col in df.columns:
-        print('Column Name: '+ col)
-        if col in cats:
-            print(df[col].value_counts())
-            print()
-        else:
-            print(df[col].value_counts(bins=10, sort=False))
-            print()
-    print()
-    print()
-    print()
-    print('Report Finished')
-    
-
-def nulls_by_col(df):
-    num_missing = df.isnull().sum()
-    prnt_missing = num_missing / df.shape[0] * 100
-    cols_missing = pd.DataFrame({'num_rows_missing': num_missing,
-                                'perc_rows_missing': prnt_missing})
-    
-    return cols_missing
-
-
-def nulls_by_row(df):
-    num_missing = df.isnull().sum(axis=1)
-    prnt_missing = num_missing / df.shape[1] * 100
-    rows_missing = pd.DataFrame({'num_cols_missing': num_missing, 
-                                 'perc_cols_missing': prnt_missing}).\
-    reset_index().groupby(['num_cols_missing', 
-                           'perc_cols_missing']).\
-    count().reset_index().rename(columns={'index':'count'})
-        
-    return rows_missing
-
-
 def handle_missing_values(df, prop_req_cols=0.5, prop_req_rows=0.75):
+    '''
+    This function takes in a dataframe and drops columns with more than 50%
+    missing values and rows with more than 75% missing values before returning
+    the DataFrame. 
+    '''
     threshold = int(round(prop_req_cols * len(df.index), 0))
     df = df.dropna(axis=1, thresh=threshold)
     threshold = int(round(prop_req_rows * len(df.columns), 0))
