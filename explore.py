@@ -182,3 +182,41 @@ def get_q4_vis(train):
     g.fig.subplots_adjust(top=0.9)
     g.fig.suptitle('Cluster 0 includes most homes with logerror outside of one standard deviation')
     plt.show()
+    
+
+def get_q4_stats(train):
+    c0 = train[train.value_cluster==0].tax_value
+    μ = train.tax_value.mean()
+    α = 0.05
+    t, p = stats.ttest_1samp(c0, μ)
+    if p/2 < α and t < 0:
+        print('''Reject the Null Hypothesis.
+    Findings suggest the mean tax value of cluster 0 is less than the population.''')
+    else:
+        print('''Fail to Reject the Null Hypothesis.
+    Findings suggest the mean tax value of cluster 0 is greater than or equal to the population.''')
+        
+        
+def get_q5_vis(train):
+    g = sns.relplot(data=train[(train.logerror > train.logerror.mean()+train.logerror.std())|(train.logerror < train.logerror.mean()-train.logerror.std())], 
+            x='lat', 
+            y='long', 
+            hue='logerror', 
+            palette='afmhot',
+            col='size_cluster')
+    g.fig.subplots_adjust(top=0.9)
+    g.fig.suptitle('Cluster 0 includes almost all homes with logerror outside of one standard deviation')
+    plt.show()
+    
+    
+def get_q5_stats(train):
+    c0 = train[train.size_cluster== 0].living_space
+    μ = train.living_space.mean()
+    α = 0.05
+    t, p = stats.ttest_1samp(c0, μ)
+    if p/2 < α and t > 0:
+        print('''Reject the Null Hypothesis.
+    Findings suggest Cluster 0 has a greater mean living space than the population.''')
+    else:
+        print('''Fail to Reject the Null Hypothesis.
+    Findings suggest Cluster 0 has a less than or equal mean living space than the population.''')
