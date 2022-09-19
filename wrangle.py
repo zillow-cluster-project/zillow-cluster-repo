@@ -106,6 +106,9 @@ def prepare_zillow(df):
                'fireplace_flag', 'structure_value', 'tax_value', 'assessment_year', 'land_value', 'taxes', 'tax_delq_flag', 'tax_delq_year', 'census', 'logerror',
                'transactiondate', 'construction_type', 'landuse_desc']
     
+    df['living_space'] = df.area - df.baths*60 - df.beds*200
+    df['price_sqft'] = df.tax_value/df.area
+    
     return df
 
 
