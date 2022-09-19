@@ -51,11 +51,13 @@ Using the data science pipeline to practice with regression using clustering. In
 
 
 ### Project goals: 
-- My goal is to find and use key drivers of property value for single family properties sold in 2017 to predict property value with the least amount of error.
+- Identify factors evaluated in home value
+- Build a model to best predict home value
+- Minimize Root Square Mean Error (RMSE) in modeling
 
 
 ### Target variable:
-- The target variable for this project is tax value.
+- The target variable for this project is log error.
 
 ### Initial questions:
 - Where are the correlations in the data?
@@ -65,7 +67,7 @@ Using the data science pipeline to practice with regression using clustering. In
 
 ### Need to haves (Deliverables):
 - A final report notebook
-- A 5min presentation
+- A 5min recorded presentation
 
 
 ### Nice to haves (With more time):
