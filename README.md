@@ -60,10 +60,11 @@ Using the data science pipeline to practice with regression using clustering. In
 - The target variable for this project is log error.
 
 ### Initial questions:
-- Where are the correlations in the data?
-- Is there a relationship between Decade Built and Tax Value?
-- Is there a relationship between Tax Value and the Year Built in LA?
-- What does the data look like on a map?
+- What continuous features have a relationship with logerror?
+- Where is the most logerror?
+- If we cluster our basic home features, is there a relationship with logerror?
+- If we cluster our value related features, is there a relationship with logerror?
+- If we cluster our size related features, is there a relationship with logerror?
 
 ### Need to haves (Deliverables):
 - A final report notebook
@@ -71,13 +72,13 @@ Using the data science pipeline to practice with regression using clustering. In
 
 
 ### Nice to haves (With more time):
- - If I had more time with the data I would focus on more feature engineering more columns.
- - I would specifically focus more on the square feet of different areas of the property.
+ - If we had more time we would like to explore the size cluster we created more.
+ - We would also like to try more combinations for clustering and modeling.
 
 
 ### Steps to Reproduce:
 - You will need to make an env.py file with a vaild username, hostname and password assigned to the variables user, host, and password
-- Then download the wrangle.py, model.py, and final_report.ipynb
+- Then download the wrangle.py, explore.py, model.py, and final_report.ipynb
 - Make sure these are all in the same directory and run the final_report.ipynb.
 
 ***
@@ -85,11 +86,9 @@ Using the data science pipeline to practice with regression using clustering. In
 ## <a name="findings"></a>Key Findings:
 [[Back to top](#top)]
 
-- Tax Value has a positive correlation with house_size_large, decade, full_bathroom, year_built, square_feet, bathrooms, and bedrooms.
-- Any decade after the 1960's is above the average Tax Value.
-- There were only 12 properties sold on Santa Catalina Island.
-- Properties near the beach tend to have higher Tax Values.
-- In the 1950's there was lots of properties sold, espically those with lower tax values.
+- Without cluster, there is no obvious continuous feature that has a relationship with logerror.
+- Clustering with tax_value seems to play a key role in logerror.
+- Clusering by size does not seem to create useful splits in the data from what is human readable. More time is needed to explore this finding.
 
 
 ***
@@ -99,32 +98,67 @@ Using the data science pipeline to practice with regression using clustering. In
 
 ### Data Used
 ---
-| Attribute | Definition | Data Type |
-| ----- | ----- | ----- |
-| bedrooms | Number of bedrooms | float64 |
-| bathrooms | Number of bathrooms | float64 |
-| square_feet | Square feet of the interior of the house | float64 |
-| tax_value | The total tax assessed value of the properity | float64 |
-| year_built | Year the house was built | float64 |
-| lot_square_feet | Total square feet of the lot | float64 |
-| fips |  Federal Information Processing Standard code | float64 |
-| region_zip | Zip code | float64 |
-| transaction_date | Date the properity was sold | object |
-| latitude | Latitude cordinates for the properity | float64 |
-| longitude | Longitude cordinates for the properity | float64 |
-| fireplace | Number of fireplaces | float64 |
-| decade | Decade the house was sold | int64 |
-| fips_str | String version of fips used for visuals | float64 |
-| house_size | The category of the house size based on the square feet | float64 |
-| house_size_large | 1 = House size is in large category, 0 = House size isn't in large category | uint8 |
-| house_size_medium | 1 = House size is in medium category, 0 = House size isn't in medium category | uint8 |
-| house_size_small | 1 = House size is in small category, 0 = House size isn't in small category | uint8 |
-| tax_value_pred_mean | Baseline prediction for tax value using mean | float64 |
-| tax_value_pred_median | Baseline prediction for tax value using mean | float64 |
-| tax_value_pred_lm | Baseline prediction for tax value using a Linear Regression Model | float64 |
-| tax_value_pred_lars | Baseline prediction for tax value using a Lasso + Lars Model | float64 |
-| tax_value_pred_glm | Baseline prediction for tax value using a Tweedie Regressor Model | float64 |
-| tax_value_pred_lm2 | Baseline prediction for tax value using a Polynomial Features Model | float64 |
+| Target | Type | Description |
+| ---- | ---- | ---- |
+| logerror | float | The log of the error in the zestimate model |
+
+
+| Feature Name | Type | Description |
+| ---- | ---- | ---- |
+| area | float | Sum of square feet in the home |
+| area12 | float | Finished living area |
+| assessment_year| float | year the home was assessed |
+| basement_sqft | float |  Finished living area below or partially below ground level |
+| bathnbed | float | Number of bathrooms and bedrooms combined |
+| baths | float | Count of bathrooms in the home |
+| beds | float | Count of bedrooms in the home |
+| census | float | tract and block data from the census |
+| city_id | float | City in which the property is located (if any) |
+| construction_type | str | type of construction the home is classified |
+| county | float | Fips code for the county the home is located in |
+| county_id | float |County in which the property is located |
+| decktype | float | Type of deck (if any) present on parcel |
+| fireplace | float | Number of fireplaces in a home (if any) |
+| fireplace_flag | float | 1 = Fireplace present, 0 = No Fireplace |
+| fullbath | float | Number of full bathrooms (sink, shower + bathtub, and toilet) present in home |
+| hottub_or_spa | float | Does the home have a hot tub or spa |
+| land_value | float | tax assessed value of the land only |
+| landuse_code | str | County land use code i.e. it's zoning at the county level |
+| landuse_desc | str | description of the land use |
+| lat | float | The home's geographical latitude |
+| living_space | float | The home area in sqft minus 200sqft per bedroom and 60sqft per bathroom (average sqft per respective room) |
+| long | float | The home's geographical longitude |
+| lot_size | float | Sum of square feet of the piece of land the home is on |
+| mvp_cluster | int | clusters built using primary home features |
+| mvp_0 | unit | cluster 0 of mvp clusters |
+| mvp_1 | unit | cluster 1 of mvp clusters |
+| mvp_2 | unit | cluster 2 of mvp clusters |
+| mvp_3 | unit | cluster 3 of mvp clusters |
+| pool | float | Number of pools on the lot (if any) |
+| pool10 | float | Spa or Hot Tub |
+| pool2 | float | Pool with Spa/Hot Tub |
+| pool7 | float | Pool without hot tub |
+| price_sqft | float | the home tax_value over the home's area in sqft |
+| raw_census | float | Census tract and block ID combined - also contains blockgroup assignment by extension |
+| rooms | float | Total number of rooms in the principal residence |
+| size_cluster | int | clusters built using size features |
+| size_0 | unit | cluster 0 of size clusters |
+| size_1 | unit | cluster 1 of size clusters |
+| size_2 | unit | cluster 2 of size clusters |
+| structure_value | float |The assessed value of the built structure on the parcel |
+| taxes | float | taxes on the home's value |
+| tax_delq_flag | str | Y if the home is deliquent on paying taxes, N if not |
+| tax_delq_year | float | year the home became deliquent on paying taxes, 9999 if not |
+| tax_value | float | tax assessed value of the home |
+| threequarterbnb | float |Count of three-quarter bathrooms (if any) |
+| transactiondate | str | date the home transaction took place |
+| value_cluster | int | clusters built using assessed value features |
+| value_0 | unit | cluster 0 of value clusters |
+| value_1 | unit | cluster 1 of value clusters |
+| value_2 | unit | cluster 2 of value clusters |
+| yard_size | float | The lot size minus the home area in sqft |
+| year_built | float | The year the home was built |
+| zip_id | float | Zip code in which the property is located |
 ***
 
 ## <a name="wrangle"></a>Data Acquisition and Preparation
@@ -152,15 +186,14 @@ Using the data science pipeline to practice with regression using clustering. In
 [[Back to top](#top)]
 - Python files used for exploration:
     - wrangle.py
+    - explore.py
     - model.py
 
 
 ### Takeaways from exploration:
-- Tax Value has a positive correlation with house_size_large, decade, full_bathroom, year_built, square_feet, bathrooms, and bedrooms.
-- Any decade after the 1960's is above the average Tax Value.
-- There were only 12 properties sold on Santa Catalina Island.
-- Fireplaces does not apear to be useful for the modeling phase.
-- Decade and the house_size columns will be used during the modeling phase.
+- Without cluster, there is no obvious continuous feature that has a relationship with logerror.
+- Clustering with tax_value seems to play a key role in logerror.
+- Clusering by size does not seem to create useful splits in the data from what is human readable. More time is needed to explore this finding.
 
 ***
 
