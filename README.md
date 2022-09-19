@@ -57,7 +57,7 @@ Using the data science pipeline to practice with regression using clustering. In
 
 
 ### Target variable:
-- The target variable for this project is log error.
+- The target variable for this project is logerror.
 
 ### Initial questions:
 - What continuous features have a relationship with logerror?
@@ -174,10 +174,7 @@ Using the data science pipeline to practice with regression using clustering. In
 - Renamed columns
 - Dropped columns not needed
 - Removed ouliers
-- Imputed nulls with 0 for fireplace and full_bathroom
-- Used square feet to feature engineer a new column where it returned small, medium, or large house size
-- Used .apply to apply a custom function to create a decade column for what decade the house was built in
-- Converted latitude and longitude to the proper values
+- Imputed null values
 - Split into the train, validate, and test sets
 
 *********************
