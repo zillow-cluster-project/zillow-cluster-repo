@@ -101,8 +101,6 @@ def get_q1_vis(train):
     This function takes in the train dataframe and displays the visualization
     for question 1 in the zillow clustering project final report.
     '''
-    # make it big
-    plt.figure(figsize=(20,20))
     # set up the correlation results
     train_corr = train[['basement_sqft', 'baths', 'beds', 'decktype', 'area', 'county', 'lat',
            'long', 'lotsize', 'rooms', 'year_built', 'structure_value', 'tax_value', 'land_value', 'taxes',
@@ -112,7 +110,7 @@ def get_q1_vis(train):
         data=train_corr,
         x="level_0", y="level_1", hue="correlation", size="correlation",
         palette="icefire", hue_norm=(-1, 1), edgecolor=".7",
-        height=12, sizes=(50, 250), size_norm=(-.2, .8))
+        height=10, sizes=(50, 250), size_norm=(-.2, .8))
     # label the visualization
     g.set(xlabel="", ylabel="", title='Zillow Correlation Scatterplot heatmap', aspect="equal")
     # format it
@@ -153,9 +151,15 @@ def get_q2_vis(train):
     plt.figure(figsize=(12,8))
     # plot it
     sns.histplot(data=train, x='logerror')
-    # zoom in to what's important
+    plt.axvline((train.logerror.mean() + train.logerror.std()), color='black')
+    plt.annotate(text='', xytext=((train.logerror.mean() + train.logerror.std()),35), xy=(.5,35), arrowprops={'facecolor':'black'})
+    plt.text(x=.55,y=34.75, s='Above 1 Standard Deviation')
+    plt.axvline((train.logerror.mean() - train.logerror.std()), color='black')
+    plt.annotate(text='', xytext=((train.logerror.mean() - train.logerror.std()),35), xy=(-.5,35), arrowprops={'facecolor':'black'})
+    plt.text(x=-1.4,y=34.75, s='Below 1 Standard Deviation')
     plt.xlim(-2,2)
     plt.ylim(0,50)
+    
     # give it a title
     plt.title('''Logerror's distribution is normal''')
     plt.show()

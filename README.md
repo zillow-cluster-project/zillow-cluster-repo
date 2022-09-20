@@ -28,7 +28,7 @@ ___
 
 
 ## <a name="project_description"></a>Project Description:
-Using the data science pipeline to practice with regression using clustering. In this repository you will find everything you need to replicate this project. This project uses the Zillow dataset to find key drivers of property value. 
+Using the data science pipeline to practice with regression using clustering. In this repository you will find everything you need to replicate this project. This project uses the Zillow dataset to find key drivers of the zestimate logerror. 
 
 [[Back to top](#top)]
 
@@ -40,19 +40,19 @@ Using the data science pipeline to practice with regression using clustering. In
 - Create README.md with data dictionary, project and business goals, come up with questions to lead the exploration and the steps to reproduce.
 - Acquire data from the Codeup Database and create a function to automate this process. Save the function in an wrangle.py file to import into the Final Report Notebook.
 - Clean and prepare data for exploration. Create a function to automate the process, store the function in the wrangle.py module, and prepare data in Final Report Notebook by importing and using the funtion.
-- Produce at least 7 clean and easy to understand visuals.
+- Produce 5-7 clean and easy to understand visuals.
 - Clearly define hypotheses, set an alpha, run the statistical tests needed, reject or fail to reject the Null Hypothesis, and document findings and takeaways.
 - Scale the data for modeling.
 - Establish a baseline accuracy.
-- Train three different classification models.
+- Train four different regression models.
 - Evaluate models on train and validate datasets.
 - Choose the model with that performs the best and evaluate that single model on the test dataset.
 - Document conclusions, takeaways, and next steps in the Final Report Notebook.
 
 
 ### Project goals: 
-- Identify factors evaluated in home value
-- Build a model to best predict home value
+- Identify factors evaluated in logerror
+- Build a model to best predict logerror
 - Minimize Root Square Mean Error (RMSE) in modeling
 
 
