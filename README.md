@@ -72,8 +72,7 @@ Using the data science pipeline to practice with regression using clustering. In
 
 
 ### Nice to haves (With more time):
- - If we had more time we would like to explore the size cluster we created more.
- - We would also like to try more combinations for clustering and modeling.
+ - Develop a model using different machine learning techniques focused on the outliers. The more we can learn about what makes them outliers, will lead us to what is causing the error.
 
 
 ### Steps to Reproduce:
@@ -270,44 +269,53 @@ Using the data science pipeline to practice with regression using clustering. In
 
 ### Baseline (Using Mean)
     
-- Baseline RMSE: 247730.36
+- Baseline RMSE: 0.177473
     
 
 - Selected features to input into models:
-    - features =  ['bedrooms', 'bathrooms', 'square_feet', 'lot_square_feet', 'full_bathroom', 'year_built', 'fips', 'region_zip', 'house_size_large', 'house_size_small', 'decade']
+    - features =  ['baths', 'beds', 'living_space', 'county', 'lat', 'long', 'lotsize', 'year_built', 'tax_value', 'price_sqft', 'mvp_0', 'mvp_2', 'value_2']
 
 ***
 
 ## Models:
 
 
-### Model 1: Lasso + Lars
+### Model 1: OLS using LinearRegression
 
 
 Model 1 results:
-- RMSE for Lasso + Lars
-- Training/In-Sample:  212401.75 
-- Validation/Out-of-Sample:  216116.17
-- R2 Value: 0.26
+- RMSE for OLS using LinearRegression
+- Training/In-Sample:  0.177096
+- Validation/Out-of-Sample:  0.160083
+- R2 Value: 0.006709
 
 
-### Model 2 : OLS using LinearRegression
+### Model 2 : Lars + Lasso, Alpha 1
 
 
 Model 2 results:
-- RMSE for OLS using LinearRegression
-- Training/In-Sample:  212395.09 
-- Validation/Out-of-Sample:  216108.91
-- R2 Value: 0.26
+- RMSE for OLS using Lars + Lasso
+- Training/In-Sample:  0.177473	
+- Validation/Out-of-Sample:  0.160623
+- R2 Value: 0.000000
 
 
-### Model 3 : Polynomial Model
+### Model 3 : Quadratic Linear Regression
 
 Model 3 results:
-- RMSE for Polynomial Model, degrees=2
-- Training/In-Sample:  204839.27 
-- Validation/Out-of-Sample:  208981.93
-- R2 Value: 0.31
+- RMSE for Quadratic Linear Regression
+- Training/In-Sample:  0.176301 
+- Validation/Out-of-Sample:  0.159838
+- R2 Value: 0.009738
+
+
+### Model 4 : Cubic Linear Regression
+
+Model 4 results:
+- RMSE for Cubic Linear Regression
+- Training/In-Sample:  0.172618
+- Validation/Out-of-Sample:  0.271843
+- R2 Value: -1.863983
 
 
 ## Selecting the Best Model:
@@ -316,27 +324,26 @@ Model 3 results:
 
 | Model | Validation | R2 |
 | ---- | ---- | ---- |
-| Baseline | 247730.36 | 0.0 |
-| Lasso + Lars | 216116.17 | 0.26 |
-| OLS using LinearRegression | 216108.91 |  0.26 |
-| Polynomial Model | 208981.93 | 0.31 |
+| Baseline | 0.160623 | 0.000000 |
+| OLS using LinearRegression | 0.160083 | 0.006709 |
+| Lars + Lasso | 0.160623 |  0.000000 |
+| Quadratic Linear Regression | 0.159838 | 0.009738 |
+| Cubic Linear Regression | 0.271843 | -1.863983 |
 
 
-- {Polynomial Model} model performed the best
+- {OLS using LinearRegression} model performed the best
 
 
 ## Testing the Model
 
-- Model Testing Results: RMSE 204854.96, R2 0.31
+- Model Testing Results: RMSE 0.182309, R2 0.002744
 
 ***
 
 ## <a name="conclusion"></a>Conclusion:
 
-- Tax Value has a positive correlation with house_size_large, decade, full_bathroom, year_built, square_feet, bathrooms, and bedrooms.
-- Any decade after the 1960's is above the average Tax Value.
-- Our RMSE value for our test dataset beat our baseline by 41,831.16.
+- Pinpointing the source of the logerror in the zestimate model has proven to be complex. Exploring with clustering algorithms can better this model, but negligibly. The best model only reduced the root mean squared error by 0.3% from the baseline results.
 
-#### A way to further improve the our predictions would be ensuring that the data gathered didn't have as many nulls, and a catagory to select if its a certain distance away from a beach. There was an extreme amount of nulls in the data, this is definitely the best way to improve predictions.
+#### Implement policies requiring complete information input when adding or update home information. This will reduce the missing values in the dataset and could reduce error.
 
 [[Back to top](#top)]
