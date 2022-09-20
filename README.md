@@ -28,7 +28,7 @@ ___
 
 
 ## <a name="project_description"></a>Project Description:
-Using the data science pipeline to practice with regression using clustering. In this repository you will find everything you need to replicate this project. This project uses the Zillow dataset to find key drivers of property value. 
+Using the data science pipeline to practice with regression using clustering. In this repository you will find everything you need to replicate this project. This project uses the Zillow dataset to find key drivers of the zestimate logerror. 
 
 [[Back to top](#top)]
 
