@@ -342,7 +342,8 @@ Model 4 results:
 
 ## <a name="conclusion"></a>Conclusion:
 
-- Pinpointing the source of the logerror in the zestimate model has proven to be complex. Exploring with clustering algorithms can better this model, but negligibly. The best model only reduced the root mean squared error by 0.3% from the baseline results.
+- Pinpointing the source of the logerror in the zestimate model has proven to be complex. Exploring with clustering algorithms can better this model, but negligibly. 
+- The best model only reduced the root mean squared error by 0.3% from the baseline results.
 
 #### Implement policies requiring complete information input when adding or update home information. This will reduce the missing values in the dataset and could reduce error.
 
