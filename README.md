@@ -1,7 +1,7 @@
 # <a name="top"></a>Zillow Clustering Project
 ![]()
 
-A link to our final presentation can be found [here.] (https://drive.google.com/file/d/18K_hMalBJcEoIv3fED2dLnpjRv9rICPn/view?usp=sharing)
+A link to our final presentation can be found [here!](https://drive.google.com/file/d/18K_hMalBJcEoIv3fED2dLnpjRv9rICPn/view?usp=sharing)
 
 by: Michael Haerle & Morgan Cross
 
