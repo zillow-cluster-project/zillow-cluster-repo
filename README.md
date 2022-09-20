@@ -197,31 +197,28 @@ Using the data science pipeline to practice with regression using clustering. In
 ## <a name="stats"></a>Statistical Analysis
 [[Back to top](#top)]
 
-### Stats Test 1: Chi Square
+### Stats Test 1: T-Test: One-Sample, One-Tail
 
 
 #### Hypothesis:
-- The null hypothesis (H<sub>0</sub>) is: The Decade Built and Tax Value are independent.
-- The alternate hypothesis (H<sub>1</sub>) is: There is a relationship between tax value and the Decade Built.
+- The null hypothesis (H<sub>0</sub>) is: The absolute value mean logerror of homes with positive logerror is less than or equal to the absolute value mean logerror of homes with negative logerror.
+- The alternate hypothesis (H<sub>1</sub>) is: The absolute value mean logerror of homes with positive logerror is greater than the absolute value mean logerror of homes with negative logerror.
 
 #### Confidence level and alpha value:
 - I established a 95% confidence level
 - alpha = 1 - confidence, therefore alpha is 0.05
 
 #### Results:
-- We reject the null hypothesis that The Decade Built and Tax Value are independent
-- There is a relationship between tax value and the Decade Built
-- 3.9309219442730487e-16
-- Chi2 214095.42
-- Degrees of Freedom 208846
+- Fail to Reject the Null Hypothesis.
+- Findings suggest homes with positive logerror have a lower or equal mean absolute value logerror than homes with a negative logerror.
 
 
-### Stats Test 2: Chi Square
+### Stats Test 2: T-Test: One-Sample, One-Tail
 
 
 #### Hypothesis:
-- The null hypothesis (H<sub>0</sub>) is: The Year Built in LA and Tax value are independent.
-- The alternate hypothesis (H<sub>1</sub>) is: There is a relationship between Tax Value and the Year Built in LA.
+- The null hypothesis (H<sub>0</sub>) is: Cluster 3 has a greater than or equal mean tax value than the population.
+- The alternate hypothesis (H<sub>1</sub>) is: Cluster 3 has a lower mean tax value than the population.
 
 #### Confidence level and alpha value:
 - I established a 95% confidence level
@@ -229,12 +226,42 @@ Using the data science pipeline to practice with regression using clustering. In
 
 
 #### Results:
-- We fail to reject the null hypothesis that The Year Built in LA and Tax value are independent
-- There appears to be no relationship between Tax Value and the Year Built in LA
-- P-Value 0.4721751128088897
-- Chi2 1454990.41
-- Degrees of Freedom 1454872
+- Reject the Null Hypothesis.
+- Findings suggest cluster 3 has a lower mean tax value than the population.
 
+
+### Stats Test 3: T-Test: One-Sample, One-Tail
+
+
+#### Hypothesis:
+- The null hypothesis (H<sub>0</sub>) is: Cluster 0 has a greater than or equal mean tax value than the population.
+- The alternate hypothesis (H<sub>1</sub>) is: Cluster 0 has a lower mean tax value than the population.
+
+#### Confidence level and alpha value:
+- I established a 95% confidence level
+- alpha = 1 - confidence, therefore alpha is 0.05
+
+
+#### Results:
+- Reject the Null Hypothesis.
+- Findings suggest the mean tax value of cluster 0 is less than the population.
+
+
+### Stats Test 4: T-Test: One-Sample, One-Tail
+
+
+#### Hypothesis:
+- The null hypothesis (H<sub>0</sub>) is: Cluster 0 has a less than or equal mean living space than the population.
+- The alternate hypothesis (H<sub>1</sub>) is: Cluster 0 has a greater mean living space than the population.
+
+#### Confidence level and alpha value:
+- I established a 95% confidence level
+- alpha = 1 - confidence, therefore alpha is 0.05
+
+
+#### Results:
+- Fail to Reject the Null Hypothesis.
+- Findings suggest Cluster 0 has a less than or equal mean living space than the population.
 
 ***
 
